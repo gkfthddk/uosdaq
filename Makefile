@@ -3,9 +3,13 @@ LIBUSB_LIB = /usr/lib64
 
 FILENAME1 = runUOSDAQ3
 FILENAME2 = getPedestal
+MODULE = NoticeUOSDAQ3
 
-EXE1	=	$(FILENAME1).exe
-EXE2	=	$(FILENAME2).exe
+NKUSBO = lib/$(MODULE).o
+NKUSBSO = lib/lib$(MODULE).so
+
+EXE1	=	bin/$(FILENAME1).exe
+EXE2	=	bin/$(FILENAME2).exe
 
 CC	=	g++
 
@@ -14,31 +18,38 @@ COPTS	=	-fPIC -Wall
 FLAGS	=	-shared -Wall,-soname -nostartfiles -s
 
 LDFLAGS =        -O2 -Wall 
-
+SLDFLAGS = -shared -Wall
+LDLIBS = -L$(LIBUSB_LIB) -lusb-1.0
 OutPutOpt = -o 
 
-LIBS	=	-L$(LIBUSB_LIB) -lusb-1.0 -Llib -lNoticeUOSDAQ3 -lm
+LIBS	=  -Llib -L$(LIBUSB_LIB) -lusb-1.0  -lm  -lNoticeUOSDAQ3
 
-INCLUDEDIR =	-I$(NKHOME)/include -I$(LIBUSB_INC)
+INCLUDEDIR =	-Ilib -I$(LIBUSB_INC)
 
-INSTALLDIR     =	$(NKHOME)/bin
-INSTALLINCLUDE =	$(NKHOME)/include
+INSTALLDIR     =	bin
 
-OBJS1	=	$(FILENAME1).o
-OBJS2	=	$(FILENAME2).o
+OBJS1	=	lib/$(FILENAME1).o
+OBJS2	=	lib/$(FILENAME2).o
 
+INSTALL_LIB = lib
 INCLUDES =	 
 
 
 #########################################################################
 
-all	:	$(EXE1) $(EXE2)
+all	:	$(NKUSBSO) $(EXE1) $(EXE2)
 clean	:
-		/bin/rm -f $(OBJS1) $(EXE1) $(OBJS2) $(EXE2)
+		/bin/rm -f $(OBJS1) $(EXE1) $(OBJS2) $(EXE2) $(NKUSBO) $(NKUSBSO)
 
 install	:	$(EXE1) $(EXE2)
-		#/bin/rm -f $(INSTALLDIR)/$(EXE)
 		install $(EXE1) $(INSTALLDIR); install $(EXE2) $(INSTALLDIR)
+		$(NKUSBSO) $(NKUSBH)
+		install $< $(INSTALL_LIB)
+		install $(NKUSBH) $(INSTALL_LIB)		
+
+
+$(NKUSBSO): $(NKUSBO)
+		$(CC) $(SLDFLAGS) $^ $(LDLIBS) $(OutPutOpt) $@ $(EXPLLINKLIBS)
 
 $(EXE1):      $(OBJS1)
 		$(CC) $(LDFLAGS) $^ $(LIBS) $(OutPutOpt)$@
@@ -48,9 +59,10 @@ $(EXE2):      $(OBJS2)
 		$(CC) $(LDFLAGS) $^ $(LIBS) $(OutPutOpt)$@
 		@echo "$@ done"
 
+
 $(OBJS1)	:	$(INCLUDES) 
 $(OBJS2)	:	$(INCLUDES) 
 
-%.o	:	%.c
+lib/%.o	:	src/%.cc
 		$(CC) $(COPTS) $(INCLUDEDIR) -c -o $@ $<
 
