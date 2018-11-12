@@ -52,6 +52,7 @@ $(NKUSBSO): $(NKUSBO)
 		$(CC) $(SLDFLAGS) $^ $(LDLIBS) $(OutPutOpt) $@ $(EXPLLINKLIBS)
 
 $(EXE1):      $(OBJS1)
+		mkdir -p bin
 		$(CC) $(LDFLAGS) $^ $(LIBS) $(OutPutOpt)$@
 		@echo "$@ done"
 
@@ -64,5 +65,6 @@ $(OBJS1)	:	$(INCLUDES)
 $(OBJS2)	:	$(INCLUDES) 
 
 lib/%.o	:	src/%.cc
+		mkdir -p lib
 		$(CC) $(COPTS) $(INCLUDEDIR) -c -o $@ $<
 
