@@ -318,12 +318,12 @@ int USB3Write(uint16_t vendor_id, uint16_t product_id, unsigned char sid, uint32
   
   libusb_device_handle *devh = nkusb_get_device_handle(vendor_id, product_id, sid);
   if (!devh) {
-    fprintf(stderr, "USB3Write: Could not get device handle for the device.\n");
+    fprintf(stderr, "321USB3Write: Could not get device handle for the device.\n");
     return -1;
   }
   
   if ((stat = libusb_bulk_transfer(devh, USB3_SF_WRITE, buffer, length, &transferred, timeout)) < 0) {
-    fprintf(stderr, "USB3Write: Could not make write request; error = %d\n", stat);
+    fprintf(stderr, "326USB3Write: Could not make write request; error = %d\n", stat);
     USB3Reset(vendor_id, product_id, sid);
     free(buffer);
     return stat;
@@ -344,7 +344,7 @@ int USB3Reset(uint16_t vendor_id, uint16_t product_id, unsigned char sid)
   
   libusb_device_handle *devh = nkusb_get_device_handle(vendor_id, product_id, sid);
   if (!devh) {
-    fprintf(stderr, "USB3Write: Could not get device handle for the device.\n");
+    fprintf(stderr, "347USB3Write: Could not get device handle for the device.\n");
     return -1;
   }
   
