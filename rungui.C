@@ -147,9 +147,9 @@
 #include <time.h>
 #include <iostream>
 #include <bitset>
+#include <algorithm>
 
 using namespace std;
-   //GetCondition *GC = new GetCondition(fRunButton,fStopButton,fLockCheck,fAnalyzeButton,fSaveButton,fLoadButton,fExitButton,fLoadEntry,fLabel1311,fLabel1312,fLabel1313,fHSlider948);
 
 class GetCondition {
         private:
@@ -158,17 +158,17 @@ class GetCondition {
                 TGCheckButton *fLockCheck;
                 TGTextEntry *fLoadEntry;
                 TGLabel *fLabeldown, *fLabelup, *fLabel1432;
-    TCanvas *c1,*c2,*c3,*c4;
+    TCanvas *c1,*c2,*c3,*c4,*c5;
     TGNumberEntry *fNumberEntry744, *fStripEntry, *fNumberEntry747;
     TGStatusBar *StatusBar;
     TGHProgressBar *ProgressBar;
     TGRadioButton *RadioButtonX, *RadioButtonY;
-    TRootEmbeddedCanvas *TabCanvas1, *TabCanvas2, *TabCanvas3, *TabCanvas4;
+    TRootEmbeddedCanvas *TabCanvas1, *TabCanvas2, *TabCanvas3, *TabCanvas4, *TabCanvas5;
     TGCompositeFrame *fMainFrame2334, *fMainFrame5073;
     TGGroupFrame *fGroupFrame743;
     TGTab *fTab775;
         public:
-                GetCondition(TGTextButton *_fRunButton, TGTextButton *_fPedButton, TGTextButton *_fStopButton, TGCheckButton *_fLockCheck,TGTextButton *_fAnalyzeButton,TGTextButton *_fSaveButton,TGTextButton *_fLoadButton,TGTextButton *_fExitButton,TGTextEntry *_fLoadEntry, TGLabel *_fLabeldown, TGLabel *_fLabelup, TGLabel *_fLabel1432, TGNumberEntry *_fNumberEntry747, TCanvas *_c1, TCanvas *_c2, TCanvas *_c3, TCanvas *_c4, TGNumberEntry *_fNumberEntry744, TGNumberEntry *_fStripEntry,TGStatusBar *_StatusBar, TGHProgressBar *_ProgressBar, TGRadioButton *_RadioButtonX, TGRadioButton *_RadioButtonY, TGMainFrame *_fMainFrame1658, TRootEmbeddedCanvas *_TabCanvas1, TRootEmbeddedCanvas *_TabCanvas2, TRootEmbeddedCanvas *_TabCanvas3, TRootEmbeddedCanvas *_TabCanvas4, TGCompositeFrame *_fMainFrame2334, TGCompositeFrame *_fMainFrame5073, TGGroupFrame *_fGroupFrame743, TGTab *_fTab775);
+                GetCondition(TGTextButton *_fRunButton, TGTextButton *_fPedButton, TGTextButton *_fStopButton, TGCheckButton *_fLockCheck,TGTextButton *_fAnalyzeButton,TGTextButton *_fSaveButton,TGTextButton *_fLoadButton,TGTextButton *_fExitButton,TGTextEntry *_fLoadEntry, TGLabel *_fLabeldown, TGLabel *_fLabelup, TGLabel *_fLabel1432, TGNumberEntry *_fNumberEntry747, TCanvas *_c1, TCanvas *_c2, TCanvas *_c3, TCanvas *_c4, TCanvas *_c5, TGNumberEntry *_fNumberEntry744, TGNumberEntry *_fStripEntry,TGStatusBar *_StatusBar, TGHProgressBar *_ProgressBar, TGRadioButton *_RadioButtonX, TGRadioButton *_RadioButtonY, TGMainFrame *_fMainFrame1658, TRootEmbeddedCanvas *_TabCanvas1, TRootEmbeddedCanvas *_TabCanvas2, TRootEmbeddedCanvas *_TabCanvas3, TRootEmbeddedCanvas *_TabCanvas4, TRootEmbeddedCanvas *_TabCanvas5, TGCompositeFrame *_fMainFrame2334, TGCompositeFrame *_fMainFrame5073, TGGroupFrame *_fGroupFrame743, TGTab *_fTab775);
                 int RunNumber,nn;
                 float sldown,slup;
 		int res = 5; 
@@ -194,7 +194,7 @@ class GetCondition {
     void Rescale();
     TFile *fp;
     TTree *intree;
-    TH1F *hos1,*hos2;
+    TH1F *hos1,*hos2,*h5;
     TH2F *h1, *h2, *h3;
     TH2F *h4;
     short px[100];
@@ -205,7 +205,7 @@ class GetCondition {
 
 };
 
-GetCondition::GetCondition(TGTextButton *_fRunButton, TGTextButton *_fPedButton, TGTextButton *_fStopButton, TGCheckButton *_fLockCheck,TGTextButton *_fAnalyzeButton,TGTextButton *_fSaveButton,TGTextButton *_fLoadButton,TGTextButton *_fExitButton,TGTextEntry *_fLoadEntry, TGLabel *_fLabeldown, TGLabel *_fLabelup, TGLabel *_fLabel1432, TGNumberEntry *_fNumberEntry747, TCanvas *_c1, TCanvas *_c2, TCanvas *_c3, TCanvas *_c4, TGNumberEntry *_fNumberEntry744, TGNumberEntry *_fStripEntry,TGStatusBar *_StatusBar, TGHProgressBar *_ProgressBar, TGRadioButton *_RadioButtonX, TGRadioButton *_RadioButtonY, TGMainFrame *_fMainFrame1658, TRootEmbeddedCanvas *_TabCanvas1, TRootEmbeddedCanvas *_TabCanvas2, TRootEmbeddedCanvas *_TabCanvas3, TRootEmbeddedCanvas *_TabCanvas4, TGCompositeFrame *_fMainFrame2334, TGCompositeFrame *_fMainFrame5073, TGGroupFrame *_fGroupFrame743, TGTab *_fTab775){
+GetCondition::GetCondition(TGTextButton *_fRunButton, TGTextButton *_fPedButton, TGTextButton *_fStopButton, TGCheckButton *_fLockCheck,TGTextButton *_fAnalyzeButton,TGTextButton *_fSaveButton,TGTextButton *_fLoadButton,TGTextButton *_fExitButton,TGTextEntry *_fLoadEntry, TGLabel *_fLabeldown, TGLabel *_fLabelup, TGLabel *_fLabel1432, TGNumberEntry *_fNumberEntry747, TCanvas *_c1, TCanvas *_c2, TCanvas *_c3, TCanvas *_c4, TCanvas *_c5, TGNumberEntry *_fNumberEntry744, TGNumberEntry *_fStripEntry,TGStatusBar *_StatusBar, TGHProgressBar *_ProgressBar, TGRadioButton *_RadioButtonX, TGRadioButton *_RadioButtonY, TGMainFrame *_fMainFrame1658, TRootEmbeddedCanvas *_TabCanvas1, TRootEmbeddedCanvas *_TabCanvas2, TRootEmbeddedCanvas *_TabCanvas3, TRootEmbeddedCanvas *_TabCanvas4, TRootEmbeddedCanvas *_TabCanvas5, TGCompositeFrame *_fMainFrame2334, TGCompositeFrame *_fMainFrame5073, TGGroupFrame *_fGroupFrame743, TGTab *_fTab775){
         fRunButton = _fRunButton;
         fPedButton = _fPedButton;
         fStopButton = _fStopButton;
@@ -224,6 +224,7 @@ GetCondition::GetCondition(TGTextButton *_fRunButton, TGTextButton *_fPedButton,
         TabCanvas2=_TabCanvas2;
         TabCanvas3=_TabCanvas3;
         TabCanvas4=_TabCanvas4;
+        TabCanvas5=_TabCanvas5;
         fMainFrame2334=_fMainFrame2334;
         fMainFrame5073=_fMainFrame5073;
         fGroupFrame743=_fGroupFrame743;
@@ -234,6 +235,7 @@ GetCondition::GetCondition(TGTextButton *_fRunButton, TGTextButton *_fPedButton,
   c2=_c2;
   c3=_c3;
   c4=_c4;
+  c5=_c5;
   fNumberEntry744=_fNumberEntry744;
   fStripEntry=_fStripEntry;
   StatusBar=_StatusBar;
@@ -264,6 +266,7 @@ TabCanvas1->MoveResize(0,0.1*hsize,29*wsize,26.4*hsize);
 TabCanvas2->MoveResize(0,0.1*hsize,29*wsize,26.4*hsize);
 TabCanvas3->MoveResize(0,0.1*hsize,29*wsize,26.4*hsize);
 TabCanvas4->MoveResize(0,0.1*hsize,29*wsize,26.4*hsize);
+TabCanvas5->MoveResize(0,0.1*hsize,29*wsize,26.4*hsize);
 fMainFrame5073->Resize(40*wsize,30*hsize);
 fMainFrame2334->Resize(40*wsize,30*hsize);
 fGroupFrame743->MoveResize(29*wsize,8*hsize,11*wsize,22*hsize);
@@ -309,6 +312,10 @@ void GetCondition::Init(){
     h4->SetStats(0);
     c4->cd();
     h4->Draw("colz");
+    TH1F* h5 = new TH1F("h5","Count Plot Title" , 100, 0, 100);
+    h5->SetStats(0);
+    c5->cd();
+    h5->Draw();
     RadioButtonY->SetState(kButtonDown);
 }
 void GetCondition::Run(){
@@ -328,6 +335,11 @@ void GetCondition::Run(){
   int frame;
   int co=0;
   int maxh=0;
+  int cut=fNumberEntry747->GetNumber();
+  cout<<cut<<endl;
+  int xcut=cut;
+  int ycut=cut;
+  int count=0;
   sid = 1;
   sec = 1;
   gain = 0;
@@ -344,7 +356,7 @@ void GetCondition::Run(){
   c1->cd();
   h1->Draw("colz");
   c1->SetMargin(0.09,0.13,.07,0.06);
-  TH2F* h2 = new TH2F("h3","Spectrum Plot Title" , res*100, 120, 1000,res*100,120,1000);
+  TH2F* h2 = new TH2F("h3","Spectrum Plot Title" , res*100, 100, 1000,res*100,100,1000);
   h2->SetStats(0);
   TH2F* h4 = new TH2F("h4","Strip Waveform Plot Title" , 2000, 0, 2000,100,0,100);
   h4->GetXaxis()->SetTitle("Entries");
@@ -359,6 +371,9 @@ void GetCondition::Run(){
 	}
   h4->GetYaxis()->SetTitleOffset(1.2);
   h4->SetStats(0);
+  TH1F* h5 = new TH1F("h5","Count Plot Title" , 100, 0, 100);
+  h5->SetStats(0);
+  /*###
   // open USB3
   UOSDAQ3init(0);
   // open UOSDAQ3  
@@ -373,19 +388,41 @@ void GetCondition::Run(){
   UOSDAQ3reset(sid);
   // start DAQ by software
   UOSDAQ3start_DAQ(sid);
-  int cyc=fNumberEntry744->GetNumber();
-  if(cyc<0){
-	  cyc=1;
+  ###*/
+  nread=10000;
+  nsample=0;
+  auto inf=new TFile("frog.root","read");
+  auto intree=(TTree*) inf->Get("data");
+  short px[100];
+  short py[100];
+  int xchek=0;
+  int ychek=0;
+  int entry=0;
+  intree->SetBranchAddress("px",&px);
+  intree->SetBranchAddress("py",&py);
+  
+  int cycle=fNumberEntry744->GetNumber();
+  int cycle1=fNumberEntry744->GetNumber();
+  if(cycle<0){
+	  cycle=1;
 	  fNumberEntry744->SetNumber(1);
   }
+  cout<<"runing..."<<endl;
   while(1){
+  cycle=fNumberEntry744->GetNumber();
+  cycle1=fNumberEntry744->GetNumber();
     co+=1;
-    if(co>cyc){cout<<"break"<<endl;break;}
+cout<<co<<" count cycle "<<cycle<<endl;
+cout<<fNumberEntry744->GetNumber()<<endl;
+    if(co>cycle1){
+cout<<"cycle break"<<endl;
+break;}
     if(running==0){
       cout<<endl<<"break"<<endl;
+          cout<<"@"<<endl;
       break;}
   for (i = 0; i < nread; i++) {
-	  ProgressBar->Increment(100./(nread*cyc));
+	  ProgressBar->Increment(100./(nread*cycle));
 	  //cout<<(1./(nread*cyc))<<endl;
     gSystem->ProcessEvents();
     if(running==0){
@@ -394,13 +431,21 @@ void GetCondition::Run(){
     
     // reads 16384 char at once
     // each 'event' is 512 char
-    UOSDAQ3read_DATA(sid, data);
+    //###UOSDAQ3read_DATA(sid, data);
     // reads 32 events at once
     //printf("nread:: %i \n", i);
     for (int event =0; event < 32; ++event) {
+      entry+=1;
       //unsigned char data[16384];
-      unsigned char *evdata = &(data[event*512]);
-      UOSDAQ3get_DATA(evdata, adcX, adcY, &frame);
+      //###unsigned char *evdata = &(data[event*512]);
+      //###UOSDAQ3get_DATA(evdata, adcX, adcY, &frame);
+      intree->GetEntry(entry);
+      for(int ii=0;ii<100;ii++){
+        adcX[ii]=px[ii];
+        adcY[ii]=py[ii];
+        pedX[ii]=0;
+        pedY[ii]=0;
+      }
       // std::cout <<"evdata:: "<< evdata<<std::endl;
       // for (int cc=0; cc<512; ++cc) {
       //   std::cout << std::bitset<4>(evdata[cc]);
@@ -413,11 +458,12 @@ void GetCondition::Run(){
           pedX[ch] += adcX[ch];
           pedY[ch] += adcY[ch];          
         }
-        else {
-	  h2->Fill(adcX[ch],adcY[ch]);
+        /*###else {
+          for(int chh=0;chh<100;chh++)h2->Fill(adcX[chh],adcY[ch]);
           adcX[ch] = adcX[ch]-(pedX[ch]);
           adcY[ch] = adcY[ch]-(pedY[ch]);
-        }
+        //  cout<<"run"<<adcX[ch]<<endl;
+        }*/
 	  if(nsample<3000){
             if(RadioButtonX->IsDown()){
 		  h4->SetBinContent(nsample-1000,ch+1,adcY[int(fStripEntry->GetNumber())]);
@@ -429,9 +475,123 @@ void GetCondition::Run(){
       }
       //Fill histogram
       if(!doPedestal){
-      if(distance(adcX,max_element(adcX,adcX+100))==0||distance(adcY,max_element(adcY,adcY+100))==0)continue;
-      if((*max_element(adcX,adcX+100)+*max_element(adcY,adcY+100))/2<slup)continue;
-      h1->Fill(distance(adcX,max_element(adcX,adcX+100)),distance(adcY,max_element(adcY,adcY+100)));
+      int xlist[10],ylist[10];
+      for(int ii=0;ii<10;ii++){
+      xlist[ii]=-1;
+      ylist[ii]=-1;
+      }
+      int xval=0;
+      int yval=0;
+      int xvalb=0;
+      int yvalb=0;
+      int xco=0;
+      int yco=0;
+      int xpi=0;
+      int ypi=0;
+      bool xup=false;
+      bool yup=false;
+      int xi=0;
+      int yi=0;
+      for(int ii=0;ii<100;ii++){
+        xco-=1;
+        if(adcX[ii]>xcut){
+         xpi+=1;
+         xval=adcX[ii];
+         if(xco<0){
+         if(xlist[xi]!=-1){xi+=1;}
+         xup=true;
+         xco=3;
+         xpi=0;
+         }
+         else if(xpi==1&&xco==0){
+         if(xlist[xi]!=-1){xi+=1;}
+         xup=true;
+         xco=3;
+         xpi=0;
+         }
+         else{
+         if(xup==true){
+           if(xval<xvalb){
+             xup=false;
+             //if(xlist[xi]==-1)xlist[xi]=ii;
+           }
+           else{xlist[xi]=ii;}
+         }
+         else{
+           xi+=1;
+         }
+         }
+        xvalb=xval;
+        }
+        yco-=1;
+        if(adcY[ii]>ycut){
+         ypi+=1;
+         yval=adcY[ii];
+         if(yco<0){
+         if(ylist[yi]!=-1){yi+=1;}
+         yup=true;
+         yco=3;
+         ypi=0;
+         }
+         else if(ypi==1&&yco==0){
+         if(ylist[yi]!=-1){yi+=1;}
+         yup=true;
+         yco=3;
+         ypi=0;
+         }
+         else{
+         if(yup==true){
+           if(yval<yvalb){
+             yup=false;
+             //if(ylist[yi]==-1)ylist[yi]=ii;
+           }
+           else{ylist[yi]=ii;}
+         }
+         else{
+           yi+=1;
+         }
+         }
+        yvalb=yval;
+        }
+      } 
+      for(int ii=0;ii<10;ii++){
+        if(xlist[ii]==-1||ylist[ii]==-1){
+         xi=ii;
+         break;
+         }
+      }
+      int left=0;
+      int right=xi-1;
+      int temp;
+      while(left<right){
+        left=0;
+        while(left<right){
+        if(adcX[xlist[left]]<adcX[xlist[left+1]]){
+        temp=xlist[left];
+        xlist[left]=xlist[left+1];
+        xlist[left+1]=temp;
+        }
+        left++;
+        }
+        right--;
+        
+      }
+      /*if(xi>=2){cout<<xi<<endl;
+      for(int ii=0;ii<xi;ii++){
+       cout<<adcX[xlist[ii]]<<" "<<adcY[ylist[ii]]<<endl;
+      }
+      }*/
+ 
+      for(int ii=0;ii<xi;ii++)h1->Fill(xlist[ii],ylist[ii]);
+      h5->Fill(count/1000,xi);
+      count+=1;
+      
+      /*if(distance(adcX,max_element(adcX,adcX+100))==0||distance(adcY,max_element(adcY,adcY+100))==0)continue;
+      if((*max_element(adcX,adcX+100)+*max_element(adcY,adcY+100))/2<cut)continue;
+      h1->Fill(distance(adcX,max_element(adcX,adcX+100)),distance(adcY,max_element(adcY,adcY+100))); 
+      */
+      
+
       }
     }
   }
@@ -474,11 +634,18 @@ void GetCondition::Run(){
    h4->Draw("colz");
    c4->Modified();
    c4->Update();
-
+   c5->cd();
+   h5->Draw("Hist C");
+   c5->Modified();
+   c5->Update();
+   
+/*###
   UOSDAQ3stop_DAQ(sid);
   UOSDAQ3close(sid);
   UOSDAQ3exit(0);
+###*/
   c1->cd();
+  //h1->Fill(50,50);
   h1->Draw("colz");
   c1->Modified();
   c1->Update();
@@ -492,6 +659,7 @@ void GetCondition::Run(){
   cout<<maxh<<endl;
   running = 0;
   doPedestal = false;
+cout<<entry<<endl;
   }
 }
 
@@ -556,7 +724,7 @@ void GetCondition::Analyze(){
   int xchek,ychek;
   float bx,by,bv;
   int NN=intree->GetEntries();
- for (int i = 0; i < slup-sldown; i++) {
+ for (int i = 0; i < 1000; i++) {
     nn+=1;
     if(nn==NN)break;
     // read frame number
@@ -1044,6 +1212,19 @@ void rungui()
    TabCanvas4->AdoptCanvas(tc4);
    fCompositeFrame4->AddFrame(TabCanvas4, new TGLayoutHints(kLHintsLeft | kLHintsTop,0,0,1,0));
    TabCanvas4->MoveResize(0,0.1*fsize,29*fsize,26.4*fsize);
+   
+   // container of "Tab5"
+   TGCompositeFrame *fCompositeFrame5;
+   fCompositeFrame5 = fTab775->AddTab("Count");
+   fCompositeFrame5->SetLayoutManager(new TGVerticalLayout(fCompositeFrame5));
+
+   TRootEmbeddedCanvas *TabCanvas5 = new TRootEmbeddedCanvas("c5",fCompositeFrame5,450,400,kSunkenFrame,ucolor);
+   TabCanvas5->SetName("TabCanvas5");
+   Int_t wTabCanvas5 = TabCanvas5->GetCanvasWindowId();
+   TCanvas *tc5 = new TCanvas("tc5", 200, 200, wTabCanvas5);
+   TabCanvas5->AdoptCanvas(tc5);
+   fCompositeFrame5->AddFrame(TabCanvas5, new TGLayoutHints(kLHintsLeft | kLHintsTop,0,0,1,0));
+   TabCanvas5->MoveResize(0,0.1*fsize,29*fsize,26.4*fsize);
 
 
    fTab775->SetTab(0);
@@ -1107,7 +1288,7 @@ void rungui()
    fMainFrame1658->MapWindow();
    //fMainFrame1658->Resize(665*size,454*size);
    fMainFrame1658->Resize(40*fsize,30*fsize);
-   GetCondition *GC = new GetCondition(fRunButton, fPedButton, fStopButton, fLockCheck, fAnalyzeButton, fSaveButton, fLoadButton, fExitButton, fLoadEntry, fLabel1311, fLabel1313, fLabel1432, fNumberEntry747,tc1,tc2,tc3,tc4,fNumberEntry744,fStripEntry,StatusBar,ProgressBar,RadioButtonX,RadioButtonY,fMainFrame1658,TabCanvas1,TabCanvas2,TabCanvas3,TabCanvas4,fMainFrame2334, fMainFrame5073, fGroupFrame743, fTab775);
+   GetCondition *GC = new GetCondition(fRunButton, fPedButton, fStopButton, fLockCheck, fAnalyzeButton, fSaveButton, fLoadButton, fExitButton, fLoadEntry, fLabel1311, fLabel1313, fLabel1432, fNumberEntry747,tc1,tc2,tc3,tc4,tc5,fNumberEntry744,fStripEntry,StatusBar,ProgressBar,RadioButtonX,RadioButtonY,fMainFrame1658,TabCanvas1,TabCanvas2,TabCanvas3,TabCanvas4, TabCanvas5, fMainFrame2334, fMainFrame5073, fGroupFrame743, fTab775);
    fLoadButton->Connect("Clicked()","GetCondition",GC,"Load()");
    fExitButton->Connect("Clicked()","GetCondition",GC,"Exit()");
    fRunButton->Connect("Clicked()","GetCondition",GC,"Run()");
@@ -1121,11 +1302,13 @@ void rungui()
    tc2->Connect("ProcessedEvent(Int_t,Int_t,Int_t,TObject*)","GetCondition",GC,"EventInfo(Int_t,Int_t,Int_t,TObject*)");
    tc3->Connect("ProcessedEvent(Int_t,Int_t,Int_t,TObject*)","GetCondition",GC,"EventInfo(Int_t,Int_t,Int_t,TObject*)");
    tc4->Connect("ProcessedEvent(Int_t,Int_t,Int_t,TObject*)","GetCondition",GC,"EventInfo(Int_t,Int_t,Int_t,TObject*)");
+   tc5->Connect("ProcessedEvent(Int_t,Int_t,Int_t,TObject*)","GetCondition",GC,"EventInfo(Int_t,Int_t,Int_t,TObject*)");
 int height=fMainFrame1658->GetHeight();
 int width=fMainFrame1658->GetWidth();
 cout<<"@@"<<endl;
 cout<<height<<width<<endl;
 GC->Init();
 //GC->Ped();
-//GC->Run();
+fNumberEntry747->SetNumber(10);
+GC->Run();
 }  
