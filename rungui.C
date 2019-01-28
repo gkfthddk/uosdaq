@@ -159,7 +159,7 @@ class GetCondition {
                 TGTextEntry *fLoadEntry;
                 TGLabel *fLabeldown, *fLabelup, *fLabel1432;
     TCanvas *c1,*c2,*c3,*c4,*c5;
-    TGNumberEntry *fNumberEntry744, *fStripEntry, *fNumberEntry747;
+    TGNumberEntry *fNumberEntry744, *fNumberEntrycount, *fStripEntry, *fNumberEntry747;
     TGStatusBar *StatusBar;
     TGHProgressBar *ProgressBar;
     TGRadioButton *RadioButtonX, *RadioButtonY;
@@ -168,7 +168,7 @@ class GetCondition {
     TGGroupFrame *fGroupFrame743;
     TGTab *fTab775;
         public:
-                GetCondition(TGTextButton *_fRunButton, TGTextButton *_fPedButton, TGTextButton *_fStopButton, TGCheckButton *_fLockCheck,TGTextButton *_fAnalyzeButton,TGTextButton *_fSaveButton,TGTextButton *_fLoadButton,TGTextButton *_fExitButton,TGTextEntry *_fLoadEntry, TGLabel *_fLabeldown, TGLabel *_fLabelup, TGLabel *_fLabel1432, TGNumberEntry *_fNumberEntry747, TCanvas *_c1, TCanvas *_c2, TCanvas *_c3, TCanvas *_c4, TCanvas *_c5, TGNumberEntry *_fNumberEntry744, TGNumberEntry *_fStripEntry,TGStatusBar *_StatusBar, TGHProgressBar *_ProgressBar, TGRadioButton *_RadioButtonX, TGRadioButton *_RadioButtonY, TGMainFrame *_fMainFrame1658, TRootEmbeddedCanvas *_TabCanvas1, TRootEmbeddedCanvas *_TabCanvas2, TRootEmbeddedCanvas *_TabCanvas3, TRootEmbeddedCanvas *_TabCanvas4, TRootEmbeddedCanvas *_TabCanvas5, TGCompositeFrame *_fMainFrame2334, TGCompositeFrame *_fMainFrame5073, TGGroupFrame *_fGroupFrame743, TGTab *_fTab775);
+                GetCondition(TGTextButton *_fRunButton, TGTextButton *_fPedButton, TGTextButton *_fStopButton, TGCheckButton *_fLockCheck,TGTextButton *_fAnalyzeButton,TGTextButton *_fSaveButton,TGTextButton *_fLoadButton,TGTextButton *_fExitButton,TGTextEntry *_fLoadEntry, TGLabel *_fLabeldown, TGLabel *_fLabelup, TGLabel *_fLabel1432, TGNumberEntry *_fNumberEntry747, TCanvas *_c1, TCanvas *_c2, TCanvas *_c3, TCanvas *_c4, TCanvas *_c5, TGNumberEntry *_fNumberEntry744, TGNumberEntry *_fNumberEntrycount, TGNumberEntry *_fStripEntry,TGStatusBar *_StatusBar, TGHProgressBar *_ProgressBar, TGRadioButton *_RadioButtonX, TGRadioButton *_RadioButtonY, TGMainFrame *_fMainFrame1658, TRootEmbeddedCanvas *_TabCanvas1, TRootEmbeddedCanvas *_TabCanvas2, TRootEmbeddedCanvas *_TabCanvas3, TRootEmbeddedCanvas *_TabCanvas4, TRootEmbeddedCanvas *_TabCanvas5, TGCompositeFrame *_fMainFrame2334, TGCompositeFrame *_fMainFrame5073, TGGroupFrame *_fGroupFrame743, TGTab *_fTab775);
                 int RunNumber,nn;
                 float sldown,slup;
 		int res = 5; 
@@ -202,10 +202,13 @@ class GetCondition {
   int pedX[100];
   int pedY[100];
     bool doPedestal = false;
+  int cycle=0;
+  int cycle1=0;
+  int countunit=100;
 
 };
 
-GetCondition::GetCondition(TGTextButton *_fRunButton, TGTextButton *_fPedButton, TGTextButton *_fStopButton, TGCheckButton *_fLockCheck,TGTextButton *_fAnalyzeButton,TGTextButton *_fSaveButton,TGTextButton *_fLoadButton,TGTextButton *_fExitButton,TGTextEntry *_fLoadEntry, TGLabel *_fLabeldown, TGLabel *_fLabelup, TGLabel *_fLabel1432, TGNumberEntry *_fNumberEntry747, TCanvas *_c1, TCanvas *_c2, TCanvas *_c3, TCanvas *_c4, TCanvas *_c5, TGNumberEntry *_fNumberEntry744, TGNumberEntry *_fStripEntry,TGStatusBar *_StatusBar, TGHProgressBar *_ProgressBar, TGRadioButton *_RadioButtonX, TGRadioButton *_RadioButtonY, TGMainFrame *_fMainFrame1658, TRootEmbeddedCanvas *_TabCanvas1, TRootEmbeddedCanvas *_TabCanvas2, TRootEmbeddedCanvas *_TabCanvas3, TRootEmbeddedCanvas *_TabCanvas4, TRootEmbeddedCanvas *_TabCanvas5, TGCompositeFrame *_fMainFrame2334, TGCompositeFrame *_fMainFrame5073, TGGroupFrame *_fGroupFrame743, TGTab *_fTab775){
+GetCondition::GetCondition(TGTextButton *_fRunButton, TGTextButton *_fPedButton, TGTextButton *_fStopButton, TGCheckButton *_fLockCheck,TGTextButton *_fAnalyzeButton,TGTextButton *_fSaveButton,TGTextButton *_fLoadButton,TGTextButton *_fExitButton,TGTextEntry *_fLoadEntry, TGLabel *_fLabeldown, TGLabel *_fLabelup, TGLabel *_fLabel1432, TGNumberEntry *_fNumberEntry747, TCanvas *_c1, TCanvas *_c2, TCanvas *_c3, TCanvas *_c4, TCanvas *_c5, TGNumberEntry *_fNumberEntry744, TGNumberEntry *_fNumberEntrycount, TGNumberEntry *_fStripEntry,TGStatusBar *_StatusBar, TGHProgressBar *_ProgressBar, TGRadioButton *_RadioButtonX, TGRadioButton *_RadioButtonY, TGMainFrame *_fMainFrame1658, TRootEmbeddedCanvas *_TabCanvas1, TRootEmbeddedCanvas *_TabCanvas2, TRootEmbeddedCanvas *_TabCanvas3, TRootEmbeddedCanvas *_TabCanvas4, TRootEmbeddedCanvas *_TabCanvas5, TGCompositeFrame *_fMainFrame2334, TGCompositeFrame *_fMainFrame5073, TGGroupFrame *_fGroupFrame743, TGTab *_fTab775){
         fRunButton = _fRunButton;
         fPedButton = _fPedButton;
         fStopButton = _fStopButton;
@@ -237,6 +240,7 @@ GetCondition::GetCondition(TGTextButton *_fRunButton, TGTextButton *_fPedButton,
   c4=_c4;
   c5=_c5;
   fNumberEntry744=_fNumberEntry744;
+  fNumberEntrycount=_fNumberEntrycount;
   fStripEntry=_fStripEntry;
   StatusBar=_StatusBar;
   ProgressBar=_ProgressBar;
@@ -371,7 +375,8 @@ void GetCondition::Run(){
 	}
   h4->GetYaxis()->SetTitleOffset(1.2);
   h4->SetStats(0);
-  TH1F* h5 = new TH1F("h5","Count Plot Title" , 100, 0, 100);
+  countunit=fNumberEntrycount->GetNumber();
+  TH1F* h5 = new TH1F("h5","Count Plot Title" , 100, 0, countunit*100);
   h5->SetStats(0);
   /*###
   // open USB3
@@ -401,8 +406,8 @@ void GetCondition::Run(){
   intree->SetBranchAddress("px",&px);
   intree->SetBranchAddress("py",&py);
   
-  int cycle=fNumberEntry744->GetNumber();
-  int cycle1=fNumberEntry744->GetNumber();
+  cycle=fNumberEntry744->GetNumber();
+  cycle1=fNumberEntry744->GetNumber();
   if(cycle<0){
 	  cycle=1;
 	  fNumberEntry744->SetNumber(1);
@@ -576,23 +581,22 @@ break;}
         right--;
         
       }
-      /*if(xi>=2){cout<<xi<<endl;
-      for(int ii=0;ii<xi;ii++){
-       cout<<adcX[xlist[ii]]<<" "<<adcY[ylist[ii]]<<endl;
-      }
-      }*/
+
  
       for(int ii=0;ii<xi;ii++)h1->Fill(xlist[ii],ylist[ii]);
-      h5->Fill(count/1000,xi);
+      h5->Fill(count,xi);
       count+=1;
       
       /*if(distance(adcX,max_element(adcX,adcX+100))==0||distance(adcY,max_element(adcY,adcY+100))==0)continue;
       if((*max_element(adcX,adcX+100)+*max_element(adcY,adcY+100))/2<cut)continue;
       h1->Fill(distance(adcX,max_element(adcX,adcX+100)),distance(adcY,max_element(adcY,adcY+100))); 
-      */
+      h5->Fill(count,1);
+      count+=1;*/
+      
       
 
       }
+
     }
   }
 
@@ -1022,6 +1026,12 @@ void rungui()
    ufont = gClient->GetFont(Form("-*-helvetica-medium-r-*-*-%d-*-*-*-*-*-iso8859-1",int(fsize/1.5)));
 
    // graphics context changes
+   TGNumberEntry *fNumberEntrycount = new TGNumberEntry(fGroupFrame743, (Double_t) 1,6,-1,(TGNumberFormat::EStyle) 5);
+   fGroupFrame743->AddFrame(fNumberEntrycount, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,24,2));
+   fNumberEntrycount->MoveResize(6*fsize,6*fsize,4*fsize,1*fsize);
+   fNumberEntrycount->SetLimits(TGNumberFormat::kNELLimitMin,1);
+   fNumberEntrycount->SetNumber(1000);
+
    TGNumberEntry *fNumberEntry744 = new TGNumberEntry(fGroupFrame743, (Double_t) 1,6,-1,(TGNumberFormat::EStyle) 5);
    fGroupFrame743->AddFrame(fNumberEntry744, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,24,2));
    fNumberEntry744->MoveResize(1*fsize,3*fsize,4*fsize,1*fsize);
@@ -1043,6 +1053,17 @@ void rungui()
    fLabel1331->SetText("Run Second");
    gClient->GetColorByName("#000000",ucolor);
    fLabel1331->ChangeBackground(ucolor);
+   
+   uGC = gClient->GetGC(&vall1331, kTRUE);
+   TGLabel *fLabel1437 = new TGLabel(fGroupFrame743,"1431",uGC->GetGC());
+   fLabel1437->SetTextJustify(36);
+   fLabel1437->SetMargins(0,0,0,0);
+   fLabel1437->SetWrapLength(-1);
+   fGroupFrame743->AddFrame(fLabel1437, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
+   fLabel1437->MoveResize(6*fsize,5.*fsize,4*fsize,1.*fsize);
+   fLabel1437->SetText("Count");
+   gClient->GetColorByName("#000000",ucolor);
+   fLabel1437->ChangeBackground(ucolor);
    
    TGNumberEntry *fNumberEntry747 = new TGNumberEntry(fGroupFrame743, (Double_t) 1,6,-1,(TGNumberFormat::EStyle) 5);
    fGroupFrame743->AddFrame(fNumberEntry747, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,24,2));
@@ -1247,7 +1268,7 @@ void rungui()
    fLoadEntry->SetText("option");
    fLoadEntry->Resize(85,fLoadEntry->GetDefaultHeight());
    fGroupFrame743->AddFrame(fLoadEntry, new TGLayoutHints(kLHintsLeft | kLHintsExpandY,2,2,2,2));
-   //commentfLoadEntry->MoveResize(88*size,40*size,85*size,23*size);
+   fLoadEntry->MoveResize(0*fsize,0*fsize,5*fsize,1.5*fsize);
 
    /*TGTextButton *fAppendButton = new TGTextButton(fMainFrame5073,"Append",-1,TGTextButton::GetDefaultGC()(),TGTextButton::GetDefaultFontStruct(),kRaisedFrame);
    fAppendButton->SetTextJustify(36);
@@ -1288,7 +1309,7 @@ void rungui()
    fMainFrame1658->MapWindow();
    //fMainFrame1658->Resize(665*size,454*size);
    fMainFrame1658->Resize(40*fsize,30*fsize);
-   GetCondition *GC = new GetCondition(fRunButton, fPedButton, fStopButton, fLockCheck, fAnalyzeButton, fSaveButton, fLoadButton, fExitButton, fLoadEntry, fLabel1311, fLabel1313, fLabel1432, fNumberEntry747,tc1,tc2,tc3,tc4,tc5,fNumberEntry744,fStripEntry,StatusBar,ProgressBar,RadioButtonX,RadioButtonY,fMainFrame1658,TabCanvas1,TabCanvas2,TabCanvas3,TabCanvas4, TabCanvas5, fMainFrame2334, fMainFrame5073, fGroupFrame743, fTab775);
+   GetCondition *GC = new GetCondition(fRunButton, fPedButton, fStopButton, fLockCheck, fAnalyzeButton, fSaveButton, fLoadButton, fExitButton, fLoadEntry, fLabel1311, fLabel1313, fLabel1432, fNumberEntry747,tc1,tc2,tc3,tc4,tc5,fNumberEntry744, fNumberEntrycount, fStripEntry,StatusBar,ProgressBar,RadioButtonX,RadioButtonY,fMainFrame1658,TabCanvas1,TabCanvas2,TabCanvas3,TabCanvas4, TabCanvas5, fMainFrame2334, fMainFrame5073, fGroupFrame743, fTab775);
    fLoadButton->Connect("Clicked()","GetCondition",GC,"Load()");
    fExitButton->Connect("Clicked()","GetCondition",GC,"Exit()");
    fRunButton->Connect("Clicked()","GetCondition",GC,"Run()");
