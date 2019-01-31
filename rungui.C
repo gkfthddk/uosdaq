@@ -295,7 +295,7 @@ StatusBar->SetText(Form("%s : %s",text0,text1));
 
 void GetCondition::Init(){
 	res=3;
-    TH2F* h1 = new TH2F("h1","2D Plot Title" , res*100, 0, 100,res*100,0,100);
+    h1 = new TH2F("h1","2D Plot Title" , res*100, 0, 100,res*100,0,100);
     h1->Fill(50,50);
     gStyle->SetPalette(kRainBow);
     cout<<"##"<<endl;
@@ -304,19 +304,19 @@ void GetCondition::Init(){
     h1->SetStats(0);
     c1->cd();
     h1->Draw("colz");
-    TH2F* h2 = new TH2F("h2","Spectrum Plot Title" , res*100, 0, 100,res*100,0,100);
+    h2 = new TH2F("h2","Spectrum Plot Title" , res*100, 0, 100,res*100,0,100);
     h2->SetStats(0);
     c2->cd();
     h2->Draw("colz");
-    TH2F* h3 = new TH2F("h3","Strip Sum Plot Title" , res*100, 0, 100,res*100,0,100);
+    h3 = new TH2F("h3","Strip Sum Plot Title" , res*100, 0, 100,res*100,0,100);
     h3->SetStats(0);
     c3->cd();
     h3->Draw("colz");
-    TH2F* h4 = new TH2F("h4","Strip Waveform Plot Title" , 1000, 0, 1000,100,0,100);
+    h4 = new TH2F("h4","Strip Waveform Plot Title" , 1000, 0, 1000,100,0,100);
     h4->SetStats(0);
     c4->cd();
     h4->Draw("colz");
-    TH1F* h5 = new TH1F("h5","Count Plot Title" , 100, 0, 100);
+    h5 = new TH1F("h5","Count Plot Title" , 100, 0, 100);
     h5->SetStats(0);
     c5->cd();
     h5->Draw();
@@ -360,9 +360,9 @@ void GetCondition::Run(){
   c1->cd();
   h1->Draw("colz");
   c1->SetMargin(0.09,0.13,.07,0.06);
-  TH2F* h2 = new TH2F("h3","Spectrum Plot Title" , res*100, 100, 1000,res*100,100,1000);
+  h2 = new TH2F("h2","Spectrum Plot Title" , res*100, 100, 1000,res*100,100,1000);
   h2->SetStats(0);
-  TH2F* h4 = new TH2F("h4","Strip Waveform Plot Title" , 2000, 0, 2000,100,0,100);
+  h4 = new TH2F("h4","Strip Waveform Plot Title" , 2000, 0, 2000,100,0,100);
   h4->GetXaxis()->SetTitle("Entries");
   if(RadioButtonX->IsDown()){
   h4->SetTitle("X Strip Waveform Plot Title");
@@ -376,7 +376,7 @@ void GetCondition::Run(){
   h4->GetYaxis()->SetTitleOffset(1.2);
   h4->SetStats(0);
   countunit=fNumberEntrycount->GetNumber();
-  TH1F* h5 = new TH1F("h5","Count Plot Title" , 100, 0, countunit*100);
+  h5 = new TH1F("h5","Count Plot Title" , 100, 0, countunit*100);
   h5->SetStats(0);
   /*###
   // open USB3
@@ -394,7 +394,7 @@ void GetCondition::Run(){
   // start DAQ by software
   UOSDAQ3start_DAQ(sid);
   ###*/
-  nread=10000;
+  nread=1000;
   nsample=0;
   auto inf=new TFile("frog.root","read");
   auto intree=(TTree*) inf->Get("data");
@@ -463,10 +463,10 @@ break;}
           pedX[ch] += adcX[ch];
           pedY[ch] += adcY[ch];          
         }
-        /*###else {
+        /*else {
           for(int chh=0;chh<100;chh++)h2->Fill(adcX[chh],adcY[ch]);
-          adcX[ch] = adcX[ch]-(pedX[ch]);
-          adcY[ch] = adcY[ch]-(pedY[ch]);
+          //adcX[ch] = adcX[ch]-(pedX[ch]);
+          //adcY[ch] = adcY[ch]-(pedY[ch]);
         //  cout<<"run"<<adcX[ch]<<endl;
         }*/
 	  if(nsample<3000){
