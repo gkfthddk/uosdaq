@@ -193,7 +193,6 @@ class GetCondition {
     void RadioY();
     void Rescale();
     TFile *fp;
-    //###TTree *intree;
     TH1F *hos1,*hos2,*h5;
     TH2F *h1, *h2, *h3;
     TH2F *h4;
@@ -379,29 +378,21 @@ void GetCondition::Run(){
   TH1F* h5 = new TH1F("h5","Count Plot Title" , 100, 0, countunit*100);
   h5->SetStats(0);
   // open USB3
-  UOSDAQ3init(0);
+  //UOSDAQ3init(0);
   // open UOSDAQ3  
-  UOSDAQ3open(sid, 0);
+  //UOSDAQ3open(sid, 0);
   // write settings
-  UOSDAQ3setup_DAQ(sid, gain, pol, dec);
+  //UOSDAQ3setup_DAQ(sid, gain, pol, dec);
   // get # of frames to take
   // 32 frames per read
-  nread = UOSDAQ3get_NUM(sec, dec);
+  //nread = UOSDAQ3get_NUM(sec, dec);
+  nread=1000;
   nsample = 0*nread * 32;
   // reset DAQ
-  UOSDAQ3reset(sid);
+  //UOSDAQ3reset(sid);
   // start DAQ by software
-  UOSDAQ3start_DAQ(sid);
+  //UOSDAQ3start_DAQ(sid);
   //nread=10000;
-  /*###auto inf=new TFile("frog.root","read");
-  auto intree=(TTree*) inf->Get("data");
-  short px[100];
-  short py[100];
-  int xchek=0;
-  int ychek=0;
-  int entry=0;
-  intree->SetBranchAddress("px",&px);
-  intree->SetBranchAddress("py",&py);*/
   
   cycle=fNumberEntry744->GetNumber();
   cycle1=fNumberEntry744->GetNumber();
@@ -433,17 +424,15 @@ break;}
     
     // reads 16384 char at once
     // each 'event' is 512 char
-    UOSDAQ3read_DATA(sid, data);
+    //UOSDAQ3read_DATA(sid, data);
     // reads 32 events at once
     //printf("nread:: %i \n", i);
     for (int event =0; event < 32; ++event) {
-      entry+=1;
       unsigned char *evdata = &(data[event*512]);
-      UOSDAQ3get_DATA(evdata, adcX, adcY, &frame);
-      //###intree->GetEntry(entry);
+      //UOSDAQ3get_DATA(evdata, adcX, adcY, &frame);
       for(int ii=0;ii<100;ii++){
-        //###adcX[ii]=px[ii];
-        //###adcY[ii]=py[ii];
+        adcX[ii]=1;
+        adcY[ii]=1;
         pedX[ii]=0;
         pedY[ii]=0;
       }
@@ -639,9 +628,9 @@ break;}
    c5->Modified();
    c5->Update();
    
-  UOSDAQ3stop_DAQ(sid);
-  UOSDAQ3close(sid);
-  UOSDAQ3exit(0);
+  //UOSDAQ3stop_DAQ(sid);
+  //UOSDAQ3close(sid);
+  //UOSDAQ3exit(0);
   c1->cd();
   //h1->Fill(50,50);
   h1->Draw("colz");
@@ -657,7 +646,6 @@ break;}
   cout<<maxh<<endl;
   running = 0;
   doPedestal = false;
-cout<<entry<<endl;
   }
 }
 
@@ -694,9 +682,6 @@ void GetCondition::Load(){
                 printf("Successfully opened file %s.root!\n", fLoadEntry->GetText());
 		int nn=0;
 		h1 = new TH2F("h1","DAQ Plot Title" , res*100, 0, 100,res*100,0,100);
-		intree=(TTree*) fp->Get("data");
-		intree->SetBranchAddress("px",&px);
-		intree->SetBranchAddress("py",&py);
                 hos1 = new TH1F("hos1", "hist", 100, 0, 100);
                 hos2 = new TH1F("hos2", "hist", 100, 0, 100);
           }
@@ -721,12 +706,9 @@ void GetCondition::Analyze(){
   int idx1,idx2,idy1,idy2;
   int xchek,ychek;
   float bx,by,bv;
-  int NN=intree->GetEntries();
  for (int i = 0; i < 1000; i++) {
     nn+=1;
-    if(nn==NN)break;
     // read frame number
-    intree->GetEntry(nn);
     xchek=0;ychek=0;
     skpx=0;skpy=0;
     // fill X channel
@@ -859,7 +841,7 @@ h1->SetStats(0);
 
 
 
-void rungui()
+void usbgui()
 {
 	int size=1;
 	int fsize=20;
@@ -1325,5 +1307,5 @@ cout<<height<<width<<endl;
 GC->Init();
 //GC->Ped();
 fNumberEntry747->SetNumber(10);
-GC->Run();
+//GC->Run();
 }  
