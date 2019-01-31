@@ -294,28 +294,29 @@ StatusBar->SetText(Form("%s : %s",text0,text1));
 
 void GetCondition::Init(){
 	res=3;
-    TH2F* h1 = new TH2F("h1","2D Plot Title" , res*100, 0, 100,res*100,0,100);
+    c1->cd();
+    h1 = new TH2F("h1","DAQ Plot Title" , res*100, 0, 100,res*100,0,100);
     h1->Fill(50,50);
     gStyle->SetPalette(kRainBow);
     cout<<"##"<<endl;
     cout<<h1<<endl;
     cout<<"##"<<endl;
     h1->SetStats(0);
-    c1->cd();
     h1->Draw("colz");
-    TH2F* h2 = new TH2F("h2","Spectrum Plot Title" , res*100, 0, 100,res*100,0,100);
-    h2->SetStats(0);
     c2->cd();
+    h2 = new TH2F("h2","Spectrum Plot Title" , res*100, 0, 100,res*100,0,100);
+    h2->SetStats(0);
     h2->Draw("colz");
-    TH2F* h3 = new TH2F("h3","Strip Sum Plot Title" , res*100, 0, 100,res*100,0,100);
+    h3 = new TH2F("h3","Strip Sum Plot Title" , res*100, 0, 100,res*100,0,100);
     h3->SetStats(0);
     c3->cd();
     h3->Draw("colz");
-    TH2F* h4 = new TH2F("h4","Strip Waveform Plot Title" , 1000, 0, 1000,100,0,100);
+    h4 = new TH2F("h4","Strip Waveform Plot Title" , 2000, 0, 2000,100,0,100);
     h4->SetStats(0);
     c4->cd();
     h4->Draw("colz");
-    TH1F* h5 = new TH1F("h5","Count Plot Title" , 100, 0, 100);
+    countunit=fNumberEntrycount->GetNumber();
+    h5 = new TH1F("h5","Count Plot Title" , 100, 0, countunit*100);
     h5->SetStats(0);
     c5->cd();
     h5->Draw();
@@ -350,7 +351,7 @@ void GetCondition::Run(){
   dec = 1;
 
   res=1;
-  h1 = new TH2F("h1","DAQ Plot Title" , res*100, 0, 100,res*100,0,100);
+  //h1 = new TH2F("h1","DAQ Plot Title" , res*100, 0, 100,res*100,0,100);
   h1->SetStats(0);
   h1->GetXaxis()->SetTitle("X strips");
   h1->GetYaxis()->SetTitle("Y strips");
@@ -359,9 +360,8 @@ void GetCondition::Run(){
   c1->cd();
   h1->Draw("colz");
   c1->SetMargin(0.09,0.13,.07,0.06);
-  TH2F* h2 = new TH2F("h3","Spectrum Plot Title" , res*100, 100, 1000,res*100,100,1000);
+  c2->cd();
   h2->SetStats(0);
-  TH2F* h4 = new TH2F("h4","Strip Waveform Plot Title" , 2000, 0, 2000,100,0,100);
   h4->GetXaxis()->SetTitle("Entries");
   if(RadioButtonX->IsDown()){
   h4->SetTitle("X Strip Waveform Plot Title");
@@ -374,24 +374,26 @@ void GetCondition::Run(){
 	}
   h4->GetYaxis()->SetTitleOffset(1.2);
   h4->SetStats(0);
+  if(countunit!=fNumberEntrycount->GetNumber()){
   countunit=fNumberEntrycount->GetNumber();
   TH1F* h5 = new TH1F("h5","Count Plot Title" , 100, 0, countunit*100);
+  }
   h5->SetStats(0);
   // open USB3
-  //UOSDAQ3init(0);
+  UOSDAQ3init(0);
   // open UOSDAQ3  
-  //UOSDAQ3open(sid, 0);
+  UOSDAQ3open(sid, 0);
   // write settings
-  //UOSDAQ3setup_DAQ(sid, gain, pol, dec);
+  UOSDAQ3setup_DAQ(sid, gain, pol, dec);
   // get # of frames to take
   // 32 frames per read
-  //nread = UOSDAQ3get_NUM(sec, dec);
-  nread=1000;
+  nread = UOSDAQ3get_NUM(sec, dec);
+  //nread=100;
   nsample = 0*nread * 32;
   // reset DAQ
-  //UOSDAQ3reset(sid);
+  UOSDAQ3reset(sid);
   // start DAQ by software
-  //UOSDAQ3start_DAQ(sid);
+  UOSDAQ3start_DAQ(sid);
   //nread=10000;
   
   cycle=fNumberEntry744->GetNumber();
@@ -412,7 +414,6 @@ cout<<"cycle break"<<endl;
 break;}
     if(running==0){
       cout<<endl<<"break"<<endl;
-          cout<<"@"<<endl;
       break;}
   for (i = 0; i < nread; i++) {
 	  ProgressBar->Increment(100./(nread*cycle));
@@ -424,15 +425,15 @@ break;}
     
     // reads 16384 char at once
     // each 'event' is 512 char
-    //UOSDAQ3read_DATA(sid, data);
+    UOSDAQ3read_DATA(sid, data);
     // reads 32 events at once
     //printf("nread:: %i \n", i);
     for (int event =0; event < 32; ++event) {
       unsigned char *evdata = &(data[event*512]);
-      //UOSDAQ3get_DATA(evdata, adcX, adcY, &frame);
+      UOSDAQ3get_DATA(evdata, adcX, adcY, &frame);
       for(int ii=0;ii<100;ii++){
-        adcX[ii]=1;
-        adcY[ii]=1;
+        //adcX[ii]=1;
+        //adcY[ii]=1;
         pedX[ii]=0;
         pedY[ii]=0;
       }
@@ -628,9 +629,9 @@ break;}
    c5->Modified();
    c5->Update();
    
-  //UOSDAQ3stop_DAQ(sid);
-  //UOSDAQ3close(sid);
-  //UOSDAQ3exit(0);
+  UOSDAQ3stop_DAQ(sid);
+  UOSDAQ3close(sid);
+  UOSDAQ3exit(0);
   c1->cd();
   //h1->Fill(50,50);
   h1->Draw("colz");
