@@ -19,7 +19,7 @@ void test(){
   int i;
   int frame;
   int count=0;
-  int sid = 2;
+  int sid = 1;
   sec = 1;
   int gain = 0;
   int pol = 0;
@@ -40,6 +40,14 @@ void test(){
   UOSDAQ3reset(sid);
   // start DAQ by software
   UOSDAQ3start_DAQ(sid);
+
+
+    UOSDAQ3read_DATA(sid, data);
+      unsigned char *evdata = &(data[0*512]);
+      UOSDAQ3get_DATA(evdata, adcX, adcY, &frame);
+
+
+
   //nread=10000;
  /*### 
   cout<<"runing..."<<endl;

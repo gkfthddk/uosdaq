@@ -334,8 +334,6 @@ void GetCondition::Run(){
   unsigned char data[16384];
   int adcX[100];
   int adcY[100];
-  int i;
-  int ch;
   int frame;
   int co=0;
   int maxh=0;
@@ -398,26 +396,36 @@ void GetCondition::Run(){
   
   cycle=fNumberEntry744->GetNumber();
   cycle1=fNumberEntry744->GetNumber();
+      int xlist[10],ylist[10];
+      int xval=0;
+      int yval=0;
+      int xvalb=0;
+      int yvalb=0;
+      int xco=0;
+      int yco=0;
+      int xpi=0;
+      int ypi=0;
+      bool xup=false;
+      bool yup=false;
+      int xi=0;
+      int yi=0;
+    int evev=0;
   if(cycle<0){
 	  cycle=1;
 	  fNumberEntry744->SetNumber(1);
   }
   cout<<"runing..."<<endl;
-  while(1){
-  cycle=fNumberEntry744->GetNumber();
-  cycle1=fNumberEntry744->GetNumber();
+int coco=0;
+  for(coco=0;coco<cycle;coco++){
+cout<<"coco"<<coco<<endl;
     co+=1;
-cout<<co<<" count cycle "<<cycle<<endl;
-cout<<fNumberEntry744->GetNumber()<<endl;
-    if(co>cycle1){
-cout<<"cycle break"<<endl;
-break;}
     if(running==0){
       cout<<endl<<"break"<<endl;
       break;}
-  for (i = 0; i < nread; i++) {
+   //nread=400;
+  for (int nid = 0; nid < nread; nid++) {
+          cout<<nread<<" nid "<<nid<<endl;
 	  ProgressBar->Increment(100./(nread*cycle));
-	  //cout<<(1./(nread*cyc))<<endl;
     gSystem->ProcessEvents();
     if(running==0){
       cout<<endl<<"break"<<endl;
@@ -428,14 +436,15 @@ break;}
     UOSDAQ3read_DATA(sid, data);
     // reads 32 events at once
     //printf("nread:: %i \n", i);
-    for (int event =0; event < 32; ++event) {
-      unsigned char *evdata = &(data[event*512]);
+    for (evev =0; evev < 32; ++evev) {
+     int ev512=evev*512;
+      unsigned char *evdata = &(data[ev512]);
       UOSDAQ3get_DATA(evdata, adcX, adcY, &frame);
-      for(int ii=0;ii<100;ii++){
+      for(int mm=0;mm<100;mm++){
         //adcX[ii]=1;
         //adcY[ii]=1;
-        pedX[ii]=0;
-        pedY[ii]=0;
+        pedX[mm]=0;
+        pedY[mm]=0;
       }
       // std::cout <<"evdata:: "<< evdata<<std::endl;
       // for (int cc=0; cc<512; ++cc) {
@@ -444,7 +453,7 @@ break;}
       
       //printf("frame:: %i \n", frame);
     nsample +=1;
-      for (ch = 0; ch < 100; ch++) {
+      for (int ch = 0; ch < 100; ch++) {
         if(doPedestal) {
           pedX[ch] += adcX[ch];
           pedY[ch] += adcY[ch];          
@@ -466,28 +475,31 @@ break;}
       }
       //Fill histogram
       if(!doPedestal){
-      int xlist[10],ylist[10];
-      for(int ii=0;ii<10;ii++){
-      xlist[ii]=-1;
-      ylist[ii]=-1;
+
+      xval=0;
+      yval=0;
+      xvalb=0;
+      yvalb=0;
+      xco=0;
+      yco=0;
+      xpi=0;
+      ypi=0;
+      xup=false;
+      yup=false;
+      xi=0;
+      yi=0;
+      for(int ll=0;ll<10;ll++){
+      xlist[ll]=-1;
+      ylist[ll]=-1;
       }
-      int xval=0;
-      int yval=0;
-      int xvalb=0;
-      int yvalb=0;
-      int xco=0;
-      int yco=0;
-      int xpi=0;
-      int ypi=0;
-      bool xup=false;
-      bool yup=false;
-      int xi=0;
-      int yi=0;
+
       for(int ii=0;ii<100;ii++){
         xco-=1;
+
         if(adcX[ii]>xcut){
          xpi+=1;
          xval=adcX[ii];
+
          if(xco<0){
          if(xlist[xi]!=-1){xi+=1;}
          xup=true;
@@ -500,6 +512,7 @@ break;}
          xco=3;
          xpi=0;
          }
+
          else{
          if(xup==true){
            if(xval<xvalb){
@@ -512,8 +525,10 @@ break;}
            xi+=1;
          }
          }
+
         xvalb=xval;
         }
+
         yco-=1;
         if(adcY[ii]>ycut){
          ypi+=1;
@@ -545,9 +560,9 @@ break;}
         yvalb=yval;
         }
       } 
-      for(int ii=0;ii<10;ii++){
-        if(xlist[ii]==-1||ylist[ii]==-1){
-         xi=ii;
+      for(int jj=0;jj<10;jj++){
+        if(xlist[jj]==-1||ylist[jj]==-1){
+         xi=jj;
          break;
          }
       }
@@ -568,8 +583,7 @@ break;}
         
       }
 
- 
-      for(int ii=0;ii<xi;ii++)h1->Fill(xlist[ii],ylist[ii]);
+      for(int kk=0;kk<xi;kk++)h1->Fill(xlist[kk],ylist[kk]);
       h5->Fill(count,xi);
       count+=1;
       
@@ -580,7 +594,6 @@ break;}
       count+=1;*/
       
       
-
       }
 
     }
@@ -602,18 +615,18 @@ break;}
   if(doPedestal) {
     h3 = new TH2F("h3","Strip Sum Plot Title" , 100, 0, 100,100,0,100);
     h3->SetStats(0);
-  for (ch = 0; ch < 100; ch++) {
+  for (int ch = 0; ch < 100; ch++) {
       pedX[ch] = pedX[ch]/nsample;
       pedY[ch] = pedY[ch]/nsample;          
       //cout<<pedX[ch]<<endl;
     }
-  cout<<nsample<<endl;
-  for (ch = 0; ch < 100; ch++) {
+  cout<<"nsample "<<nsample<<endl;
+  for (int ch = 0; ch < 100; ch++) {
           for (int chh = 0; chh < 100; chh++) {
 	    h3->SetBinContent(ch+1,chh+1,pedX[ch]+pedY[chh]);
 	  }
   }
-  cout<<nsample<<endl;
+  cout<<"nsample2 "<<nsample<<endl;
    c3->cd();
    h3->Draw("colz");
    c3->Modified();
@@ -644,7 +657,7 @@ break;}
     if(running==0){cout<<endl<<"break"<<endl;break;}
     if(co>200000)break;
   }*/
-  cout<<maxh<<endl;
+  cout<<"maxh"<<maxh<<endl;
   running = 0;
   doPedestal = false;
   }
@@ -1007,7 +1020,7 @@ void usbgui()
    fGroupFrame743->AddFrame(fNumberEntrycount, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,24,2));
    fNumberEntrycount->MoveResize(6*fsize,6*fsize,4*fsize,1*fsize);
    fNumberEntrycount->SetLimits(TGNumberFormat::kNELLimitMin,1);
-   fNumberEntrycount->SetNumber(1000);
+   fNumberEntrycount->SetNumber(100);
 
    TGNumberEntry *fNumberEntry744 = new TGNumberEntry(fGroupFrame743, (Double_t) 1,6,-1,(TGNumberFormat::EStyle) 5);
    fGroupFrame743->AddFrame(fNumberEntry744, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,24,2));
@@ -1308,5 +1321,5 @@ cout<<height<<width<<endl;
 GC->Init();
 //GC->Ped();
 fNumberEntry747->SetNumber(10);
-//GC->Run();
+GC->Run();
 }  
