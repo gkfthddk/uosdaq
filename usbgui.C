@@ -198,8 +198,8 @@ class GetCondition {
     TH2F *h4;
     short px[100];
     short py[100];
-  int pedX[100];
-  int pedY[100];
+  int bpedX[100];
+  int bpedY[100];
     bool doPedestal = false;
   int cycle=0;
   int cycle1=0;
@@ -293,6 +293,10 @@ StatusBar->SetText(Form("%s : %s",text0,text1));
 }
 
 void GetCondition::Init(){
+      for(int mm=0;mm<100;mm++){
+        bpedX[mm]=0;
+        bpedY[mm]=0;
+      }
 	res=3;
     c1->cd();
     h1 = new TH2F("h1","DAQ Plot Title" , res*100, 0, 100,res*100,0,100);
@@ -334,6 +338,12 @@ void GetCondition::Run(){
   unsigned char data[16384];
   int adcX[100];
   int adcY[100];
+  int pedX[100];
+  int pedY[100];
+      for(int mm=0;mm<100;mm++){
+        pedX[mm]=bpedX[mm];
+        pedY[mm]=bpedY[mm];
+      }
   int frame;
   int co=0;
   int maxh=0;
@@ -424,7 +434,7 @@ cout<<"coco"<<coco<<endl;
       break;}
    //nread=400;
   for (int nid = 0; nid < nread; nid++) {
-          cout<<nread<<" nid "<<nid<<endl;
+        //  cout<<nread<<" nid "<<nid<<endl;
 	  ProgressBar->Increment(100./(nread*cycle));
     gSystem->ProcessEvents();
     if(running==0){
@@ -443,8 +453,8 @@ cout<<"coco"<<coco<<endl;
       for(int mm=0;mm<100;mm++){
         //adcX[ii]=1;
         //adcY[ii]=1;
-        pedX[mm]=0;
-        pedY[mm]=0;
+      //  pedX[mm]=0;
+       // pedY[mm]=0;
       }
       // std::cout <<"evdata:: "<< evdata<<std::endl;
       // for (int cc=0; cc<512; ++cc) {
@@ -618,6 +628,8 @@ cout<<"coco"<<coco<<endl;
   for (int ch = 0; ch < 100; ch++) {
       pedX[ch] = pedX[ch]/nsample;
       pedY[ch] = pedY[ch]/nsample;          
+      bpedX[ch]=pedX[ch];
+      bpedY[ch]=pedY[ch];
       //cout<<pedX[ch]<<endl;
     }
   cout<<"nsample "<<nsample<<endl;
@@ -667,8 +679,8 @@ void GetCondition::Ped(){
 if(running==0){
 doPedestal = true;
   for(int i=0;i<100;i++){
-  pedX[i]=0;
-  pedY[i]=0;
+  bpedX[i]=0;
+  bpedY[i]=0;
 }
 cout<<"pedestal"<<endl;
 GetCondition::Run();
@@ -1321,5 +1333,5 @@ cout<<height<<width<<endl;
 GC->Init();
 //GC->Ped();
 fNumberEntry747->SetNumber(10);
-GC->Run();
+//GC->Run();
 }  
