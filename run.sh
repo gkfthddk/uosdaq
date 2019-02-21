@@ -1,1 +1,1 @@
-root lib/libNoticeUOSDAQ3.so rungui.C
+root lib/libNoticeUOSDAQ3.so usbgui.C
