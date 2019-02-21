@@ -297,7 +297,7 @@ void GetCondition::Init(){
         bpedX[mm]=0;
         bpedY[mm]=0;
       }
-	res=3;
+	res=1;
     c1->cd();
     h1 = new TH2F("h1","DAQ Plot Title" , res*100, 0, 100,res*100,0,100);
     h1->Fill(50,50);
@@ -359,7 +359,7 @@ void GetCondition::Run(){
   dec = 1;
 
   res=1;
-  //h1 = new TH2F("h1","DAQ Plot Title" , res*100, 0, 100,res*100,0,100);
+  h1 = new TH2F("h1","DAQ Plot Title" , res*100, 0, 100,res*100,0,100);
   h1->SetStats(0);
   h1->GetXaxis()->SetTitle("X strips");
   h1->GetYaxis()->SetTitle("Y strips");
